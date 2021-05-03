@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "module": "esnext",
+    "target": "es2018",
+    "outDir": "dist",
+    "lib": [
+      "dom",
+      "es2018"
+    ],
+    "sourceMap": true,
+    "rootDir": "src",
+    "experimentalDecorators": true,
+    "strict": true,
+    "esModuleInterop": true,
+    "declaration": true,
+    "moduleResolution": "Node"
+  },
+  "exclude": [
+    "dist",
+    "node_modules",
+    "dist/**/*.d.ts"
+  ]
+}
