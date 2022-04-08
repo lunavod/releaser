@@ -207,3 +207,7 @@ if (confirmPush) {
 }
 
 console.log(chalk`\n{green.bold Done!~}`)
+
+console.log(
+  chalk`{yellow Publish to npm: yarn publish --new-version ${newVersion}}`,
+)
