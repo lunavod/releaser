@@ -2,29 +2,29 @@ env:
   node: true
   es2021: true
 
-parser: '@typescript-eslint/parser'
+parser: "@typescript-eslint/parser"
 
 plugins:
-  - '@typescript-eslint'
+  - "@typescript-eslint"
 
 extends:
   - plugin:import/warnings
-  - 'plugin:@typescript-eslint/recommended'
+  - "plugin:@typescript-eslint/recommended"
 
 rules:
   linebreak-style: [error, unix]
-  '@typescript-eslint/no-non-null-assertion': off
+  "@typescript-eslint/no-non-null-assertion": off
   no-useless-escape: off
   react/react-in-jsx-scope: off
   indent: off
-  quotes: [ error, double, { avoidEscape: true } ]
-  semi: [ error, never ]
+  quotes: [error, double, { avoidEscape: true }]
+  semi: [error, never]
   no-console: off
-  max-len: [ 2, 120 ]
-  '@typescript-eslint/no-explicit-any': off
-  '@typescript-eslint/no-var-requires': off
-  '@typescript-eslint/explicit-module-boundary-types': off
-  '@typescript-eslint/no-extra-semi': off
+  max-len: [2, 120]
+  "@typescript-eslint/no-explicit-any": off
+  "@typescript-eslint/no-var-requires": off
+  "@typescript-eslint/explicit-module-boundary-types": off
+  "@typescript-eslint/no-extra-semi": off
 
 parserOptions:
   sourceType: module

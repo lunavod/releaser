@@ -6,12 +6,12 @@ import chalk from "chalk"
 import fs from "fs-extra"
 import path from "path"
 import inquirer from "inquirer"
-import {DefaultLogFields, ListLogLine} from "simple-git/typings"
+import { DefaultLogFields, ListLogLine } from "simple-git/typings"
 
 const dir = process.cwd()
 
 const git = simpleGit({
-  baseDir: dir
+  baseDir: dir,
 })
 
 let packageJson
@@ -25,8 +25,8 @@ try {
 }
 
 const typesToLevels: { [key: string]: number } = {
-  "feat": 1,
-  "fix": 0
+  feat: 1,
+  fix: 0,
 }
 
 async function updateRemote() {
@@ -35,7 +35,9 @@ async function updateRemote() {
   spinner.succeed()
 }
 
-async function getCommitsSinceLastRelease(): Promise<[(DefaultLogFields & ListLogLine)[], string | null]> {
+async function getCommitsSinceLastRelease(): Promise<
+  [(DefaultLogFields & ListLogLine)[], string | null]
+> {
   const log = (await git.log()).all
   const currentReleaseCommits = []
   const re = /tag: v(\d+\.\d+.\d+)/
@@ -55,7 +57,6 @@ function getTypeFromMessage(msg: string): string | null {
   }
   return null
 }
-
 
 await updateRemote()
 
@@ -77,7 +78,13 @@ const messages = log.map(c => c.message)
 
 const maxLevel = log
   .map(commit => getTypeFromMessage(commit.message))
-  .reduce((maxLevel, type) => (type !== null && typesToLevels[type] > maxLevel) ? typesToLevels[type] : maxLevel, 0)
+  .reduce(
+    (maxLevel, type) =>
+      type !== null && typesToLevels[type] > maxLevel
+        ? typesToLevels[type]
+        : maxLevel,
+    0,
+  )
 
 let releaseStr
 switch (maxLevel) {
@@ -110,18 +117,32 @@ messages.forEach(msg => {
     let [type, scope, message] = groups.slice(1, 4)
     if (scope) {
       scope = scope.slice(1, -1)
-      console.log(chalk`%s{grey | }{green %s} {grey [}{blue %s}{grey ]}`, message.padEnd(maxLen + 2), type, scope)
+      console.log(
+        chalk`%s{grey | }{green %s} {grey [}{blue %s}{grey ]}`,
+        message.padEnd(maxLen + 2),
+        type,
+        scope,
+      )
     } else {
-      console.log(chalk`%s{grey | }{green %s}`, message.padEnd(maxLen + 2), type)
+      console.log(
+        chalk`%s{grey | }{green %s}`,
+        message.padEnd(maxLen + 2),
+        type,
+      )
     }
   } else {
-    console.log(chalk`%s{grey | }{yellow non-conventional}`, msg.padEnd(maxLen + 2))
+    console.log(
+      chalk`%s{grey | }{yellow non-conventional}`,
+      msg.padEnd(maxLen + 2),
+    )
   }
 })
 
 console.log(chalk`\n{magenta Release type:}`, releaseStr)
 
-let [major, minor, patch] = lastVersion.split(".").map((s: string) => parseInt(s))
+let [major, minor, patch] = lastVersion
+  .split(".")
+  .map((s: string) => parseInt(s))
 if (maxLevel === 0) {
   patch += 1
 } else if (maxLevel === 1) {
@@ -134,13 +155,19 @@ if (maxLevel === 0) {
 }
 
 const newVersion = `${major}.${minor}.${patch}`
-console.log(chalk`{magenta Version: }{blue %s }{grey => }{green %s}\n`, lastVersion, newVersion)
+console.log(
+  chalk`{magenta Version: }{blue %s }{grey => }{green %s}\n`,
+  lastVersion,
+  newVersion,
+)
 
-const {confirmed} = await inquirer.prompt([{
-  type: "confirm",
-  message: "Proceed?",
-  name: "confirmed"
-}])
+const { confirmed } = await inquirer.prompt([
+  {
+    type: "confirm",
+    message: "Proceed?",
+    name: "confirmed",
+  },
+])
 
 if (!confirmed) {
   console.log(chalk`{red Ok, exiting}`)
@@ -148,7 +175,10 @@ if (!confirmed) {
 }
 
 const vSpinner = ora("Updating package.json...")
-fs.writeFileSync(path.join(dir, "package.json"), JSON.stringify({...packageJson, version: newVersion}, undefined, "  "))
+fs.writeFileSync(
+  path.join(dir, "package.json"),
+  JSON.stringify({ ...packageJson, version: newVersion }, undefined, "  "),
+)
 vSpinner.succeed()
 
 const cSpinner = ora("Committing...")
@@ -161,12 +191,14 @@ git.tag([`v${newVersion}`])
 tagSpinner.succeed()
 
 console.log()
-const {confirmPush} = await inquirer.prompt([{
-  type: "confirm",
-  message: "Push?",
-  name: "confirmPush",
-  default: false
-}])
+const { confirmPush } = await inquirer.prompt([
+  {
+    type: "confirm",
+    message: "Push?",
+    name: "confirmPush",
+    default: false,
+  },
+])
 if (confirmPush) {
   const pSpinner = ora("Pushing...").start()
   await git.push()
