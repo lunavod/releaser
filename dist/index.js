@@ -61,7 +61,7 @@ if (!log.length) {
     process.exit();
 }
 if (!lastVersion)
-    lastVersion = "0.0.1";
+    lastVersion = packageJson.version;
 const messages = log.map(c => c.message);
 const maxLevel = log
     .map(commit => getTypeFromMessage(commit.message))

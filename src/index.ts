@@ -72,7 +72,8 @@ if (!log.length) {
   console.log(chalk`\n{yellow No new commits for release!}`)
   process.exit()
 }
-if (!lastVersion) lastVersion = "0.0.1"
+
+if (!lastVersion) lastVersion = packageJson.version
 
 const messages = log.map(c => c.message)
 
